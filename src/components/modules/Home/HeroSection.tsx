@@ -74,7 +74,7 @@ export function HeroSection({
         }}
       />
       {/* Content Container */}
-      <div className="w-full  py-8  lg:px-16 relative">
+      <div className="w-full py-8 relative">
         <div className="w-11/12 md:w-11/12 lg:w-11/12 xl:container mx-auto">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
             {/* Left Column - Hero Content */}
