@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { HeroSection } from "@/components/modules/Home/HeroSection";
 
 export default function Home() {
   return (
-    <div>
-      <h1>welcome to next.js - 16</h1>
-      <Button>Click Me</Button>
-    </div>
+    <>
+      <HeroSection />
+    </>
   );
 }
