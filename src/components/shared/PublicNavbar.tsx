@@ -31,7 +31,9 @@ const PublicNavbar = () => {
         <div className="flex items-center lg:order-2 space-x-2 lg:space-x-0 rtl:space-x-reverse">
           {/* User Menu */}
           <div className="flex items-center gap-2">
-            <Button>Login</Button>
+            <Link href="/login">
+              <Button>Login</Button>
+            </Link>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               type="button"
