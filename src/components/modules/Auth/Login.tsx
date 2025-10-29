@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import checkAuthStatus from "@/utility/auth";
 import loginUser from "@/utility/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -56,8 +57,28 @@ const Login = () => {
     try {
       const res = await loginUser(data.email, data.password);
       if (res.success) {
+        const authStatus = await checkAuthStatus();
+        if (authStatus.isAuthenticated && authStatus.user) {
+          const { role } = authStatus.user;
+
+          switch (role) {
+            case "ADMIN":
+              router.push("/dashboard");
+              break;
+            case "DOCTOR":
+              router.push("/dashboard/doctor");
+              break;
+            case "PATIENT":
+              router.push("/dashboard/patient");
+              break;
+            default:
+              router.push("/");
+              break;
+          }
+        } else {
+          setError("Login failed. Please try again");
+        }
         toast.success("Login Successfully");
-        router.push("/");
         form.reset();
       } else {
         setError("Login failed. Please try again");
