@@ -1,17 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const loginUser = async (email: string, password: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+      credentials: "include",
+    });
 
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.message || "Login failed");
+    const data = await res.json();
+    return data;
+  } catch (error: any) {
+    throw new Error(error.message || "An error occurred while logging in.");
   }
-  return data;
 };
 
 export default loginUser;

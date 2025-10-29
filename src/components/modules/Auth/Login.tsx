@@ -22,6 +22,7 @@ import loginUser from "@/utility/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,6 +41,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -53,10 +55,12 @@ const Login = () => {
     setError("");
     try {
       const res = await loginUser(data.email, data.password);
-      console.log(res);
       if (res.success) {
         toast.success("Login Successfully");
+        router.push("/");
         form.reset();
+      } else {
+        setError("Login failed. Please try again");
       }
     } catch (error) {
       setError("Login failed. Please check your credentials and try again");
