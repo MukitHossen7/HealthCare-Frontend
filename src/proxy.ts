@@ -5,7 +5,7 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get("accessToken")?.value;
   const { pathname } = request.nextUrl;
   const protectedPaths = [
-    "/dashboard/*",
+    "/dashboard",
     "/profile",
     "/setting",
     "/appointments",

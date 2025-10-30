@@ -1,13 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import checkAuthStatus from "@/utility/auth";
+
+// const { user } = await checkAuthStatus();
 
 const PublicNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await checkAuthStatus();
+        setUser(data?.user || null);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, []);
   return (
     <nav className="bg-white/98 sticky top-0 z-50 backdrop-blur-2xl">
       <div className="w-11/12 md:w-11/12 lg:w-11/12 xl:container flex flex-wrap items-center justify-between mx-auto py-2 lg:py-4">
@@ -31,23 +47,29 @@ const PublicNavbar = () => {
         <div className="flex items-center lg:order-2 space-x-2 lg:space-x-0 rtl:space-x-reverse">
           {/* User Menu */}
           <div className="flex items-center gap-2">
-            <Link href="/login">
-              <Button>Login</Button>
-            </Link>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              type="button"
-              className="flex text-sm bg-gray-800 rounded-full lg:me-0 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
-            >
-              <span className="sr-only">Open user menu</span>
-              <Image
-                className="w-8 h-8 rounded-full"
-                src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-                alt="user photo"
-                width={32}
-                height={32}
-              />
-            </button>
+            {user && user?.email ? (
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                type="button"
+                className="flex text-sm bg-gray-800 rounded-full lg:me-0 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
+              >
+                <span className="sr-only">Open user menu</span>
+                <Image
+                  className="w-8 h-8 rounded-full"
+                  src={
+                    user?.profilePhoto ??
+                    "https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+                  }
+                  alt="user photo"
+                  width={32}
+                  height={32}
+                />
+              </button>
+            ) : (
+              <Link href="/login">
+                <Button>Login</Button>
+              </Link>
+            )}
           </div>
 
           {/* Dropdown */}
@@ -55,21 +77,23 @@ const PublicNavbar = () => {
             <div className="absolute top-14 right-4 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600">
               <div className="px-4 py-3">
                 <span className="block text-sm text-gray-900 dark:text-white">
-                  Bonnie Green
+                  {user?.name}
                 </span>
                 <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                  name@flowbite.com
+                  {user?.email}
                 </span>
               </div>
               <ul className="py-2">
-                <li>
-                  <Link
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Dashboard
-                  </Link>
-                </li>
+                {user && user.role === "ADMIN" && (
+                  <li>
+                    <Link
+                      href="/dashboard/admin"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link
                     href="#"
