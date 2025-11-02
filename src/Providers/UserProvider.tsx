@@ -1,7 +1,8 @@
 "use client";
 
 import { IUser } from "@/types/userTypes";
-import { createContext, useContext, useState } from "react";
+import checkAuthStatus from "@/utility/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface IUserContextType {
   user: IUser | null;
@@ -26,6 +27,21 @@ export const UserProvider = ({
   children: React.ReactNode;
 }) => {
   const [user, setUser] = useState<IUser | null>(null);
+
+  useEffect(() => {
+    const revalidateUser = async () => {
+      try {
+        const res = await checkAuthStatus();
+        setUser(res?.user);
+      } catch {
+        setUser(null);
+      }
+    };
+
+    if (!user) {
+      revalidateUser();
+    }
+  }, [user]);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}

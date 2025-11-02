@@ -1,29 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
-import checkAuthStatus from "@/utility/auth";
+import { useUser } from "@/Providers/UserProvider";
 
 // const { user } = await checkAuthStatus();
 
 const PublicNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await checkAuthStatus();
-        setUser(data?.user || null);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-    fetchUser();
-  }, []);
+  const { user } = useUser();
+  // console.log(user);
   return (
     <nav className="bg-white/98 sticky top-0 z-50 backdrop-blur-2xl">
       <div className="w-11/12 md:w-11/12 lg:w-11/12 xl:container flex flex-wrap items-center justify-between mx-auto py-2 lg:py-4">
