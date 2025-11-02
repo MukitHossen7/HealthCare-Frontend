@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/Providers/UserProvider";
 import checkAuthStatus from "@/utility/auth";
 import loginUser from "@/utility/login";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,6 +44,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { setUser } = useUser();
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -58,6 +60,7 @@ const Login = () => {
       const res = await loginUser(data.email, data.password);
       if (res.success) {
         const authStatus = await checkAuthStatus();
+        setUser(authStatus?.user); //setUser Immediately
         if (authStatus.isAuthenticated && authStatus.user) {
           const { role } = authStatus.user;
 

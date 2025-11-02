@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { jwtDecode } from "jwt-decode";
 
-interface IUserInterface {
+interface IDecodedUser {
   id: string;
   email: string;
   role: "ADMIN" | "DOCTOR" | "PATIENT";
@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // if token is available
-  let user: IUserInterface | null = null;
+  let user: IDecodedUser | null = null;
   if (accessToken) {
     try {
       user = jwtDecode(accessToken);
@@ -93,7 +93,7 @@ export async function proxy(request: NextRequest) {
 
   //if user exists but user go to login page this is bad
   if (user && authRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL(`/`, request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
