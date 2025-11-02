@@ -1,0 +1,7 @@
+const logOutUser = async () => {
+  await fetch(`/api/logout`, {
+    method: "POST",
+  });
+  window.location.href = "/";
+};
+export default logOutUser;

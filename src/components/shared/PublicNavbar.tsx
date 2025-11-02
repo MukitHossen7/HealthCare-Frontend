@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { useUser } from "@/Providers/UserProvider";
+import logOutUser from "@/utility/logOut";
 
 // const { user } = await checkAuthStatus();
 
@@ -84,12 +85,14 @@ const PublicNavbar = () => {
                   </li>
                 )}
                 <li>
-                  <Link
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  <button
+                    onClick={() => {
+                      logOutUser();
+                    }}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full text-left "
                   >
                     Sign out
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </div>
