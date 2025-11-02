@@ -25,16 +25,15 @@ import { useUser } from "@/Providers/UserProvider";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser();
   // console.log(user);
-  const navMainItems = [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: IconDashboard,
-    },
-  ];
+  const navMainItems = [];
 
   if (user?.role === "ADMIN") {
     navMainItems.push(
+      {
+        title: "Dashboard",
+        url: "/admin/dashboard",
+        icon: IconDashboard,
+      },
       {
         title: "Manage Doctors",
         url: "/admin/dashboard/manage-doctors",
@@ -46,6 +45,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: IconUsers,
       }
     );
+  }
+
+  if (user?.role === "DOCTOR") {
+    navMainItems.push({
+      title: "Dashboard",
+      url: "/doctor/dashboard",
+      icon: IconDashboard,
+    });
   }
 
   const data = {
