@@ -1,6 +1,6 @@
 import DashboardComponent from "@/components/modules/Dashboard/Dashboard";
 
-const DashboardPage = () => {
+const AdminDashboardPage = () => {
   return (
     <>
       <DashboardComponent />
@@ -8,4 +8,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default AdminDashboardPage;
