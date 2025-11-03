@@ -14,9 +14,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useDoctors } from "@/hooks/useDoctor";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function DoctorFormDialog() {
+  const { addDoctor } = useDoctors();
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
@@ -48,7 +51,6 @@ export function DoctorFormDialog() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const formPayload = new FormData();
 
     if (file) {
@@ -56,19 +58,25 @@ export function DoctorFormDialog() {
     }
 
     const data = {
-      password: "123456",
-      doctor: {
-        ...formData,
-        experience: Number(formData.experience),
-        appointmentFee: Number(formData.appointmentFee),
-      },
+      ...formData,
+      password: "doctor@123",
+      experience: Number(formData.experience),
+      appointmentFee: Number(formData.appointmentFee),
     };
 
     formPayload.append("data", JSON.stringify(data));
 
-    // await addDoctor.mutateAsync(formPayload);
-
-    console.log(formPayload);
+    try {
+      const result = await addDoctor.mutateAsync(formPayload);
+      if (result.success) {
+        toast.success("Doctor added successfully!");
+      } else {
+        toast.error("Failed to add doctor");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Failed to add doctor");
+    }
 
     setOpen(false);
   };

@@ -26,7 +26,7 @@ const DoctorTable = () => {
     console.log(id);
   };
   if (isLoading) {
-    <HeartbeatLoader />;
+    return <HeartbeatLoader />;
   }
   return (
     <main className="mt-10 p-10 mx-auto w-full">
@@ -55,17 +55,20 @@ const DoctorTable = () => {
           {doctors?.data?.length > 0 ? (
             doctors?.data?.map((doctor: IDoctor) => (
               <TableRow key={doctor?.id}>
-                <TableCell className="w-20 h-20">
+                <TableCell>
                   {doctor?.profilePhoto ? (
-                    <Image
-                      src={doctor?.profilePhoto}
-                      alt={doctor?.name}
-                      width={48}
-                      height={48}
-                      className="rounded-full object-cover"
-                    />
+                    <div className="relative w-12 h-12 mx-auto rounded-full overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                      <Image
+                        src={doctor?.profilePhoto}
+                        alt={doctor?.name}
+                        fill
+                        className="object-cover transform hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
                   ) : (
-                    "—"
+                    <div className="w-12 h-12 mx-auto flex items-center justify-center bg-gray-200 rounded-full text-gray-500">
+                      —
+                    </div>
                   )}
                 </TableCell>
                 <TableCell>{doctor?.name}</TableCell>
