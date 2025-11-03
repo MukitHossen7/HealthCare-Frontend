@@ -42,40 +42,40 @@ export async function proxy(request: NextRequest) {
   }
 
   // if not available user/accessToken but refreshToken is available
-  if (!user && refreshToken) {
-    try {
-      const refreshRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ refreshToken }),
-        }
-      );
-      if (refreshRes.ok) {
-        const newAccessToken = request.cookies.get("accessToken")?.value;
-        user = jwtDecode(newAccessToken!);
-        return NextResponse.next();
-      } else {
-        const response = NextResponse.redirect(
-          new URL(`/login?redirect=${pathname}`, request.url)
-        );
-        response.cookies.delete("accessToken");
-        response.cookies.delete("refreshToken");
-        return response;
-      }
-    } catch (error) {
-      console.log("Error refreshing token", error);
-      const response = NextResponse.redirect(
-        new URL(`/login?redirect=${pathname}`, request.url)
-      );
-      response.cookies.delete("accessToken");
-      response.cookies.delete("refreshToken");
-      return response;
-    }
-  }
+  // if (!user && refreshToken) {
+  //   try {
+  //     const refreshRes = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ refreshToken }),
+  //       }
+  //     );
+  //     if (refreshRes.ok) {
+  //       const newAccessToken = request.cookies.get("accessToken")?.value;
+  //       user = jwtDecode(newAccessToken!);
+  //       return NextResponse.next();
+  //     } else {
+  //       const response = NextResponse.redirect(
+  //         new URL(`/login?redirect=${pathname}`, request.url)
+  //       );
+  //       response.cookies.delete("accessToken");
+  //       response.cookies.delete("refreshToken");
+  //       return response;
+  //     }
+  //   } catch (error) {
+  //     console.log("Error refreshing token", error);
+  //     const response = NextResponse.redirect(
+  //       new URL(`/login?redirect=${pathname}`, request.url)
+  //     );
+  //     response.cookies.delete("accessToken");
+  //     response.cookies.delete("refreshToken");
+  //     return response;
+  //   }
+  // }
 
   //If user is available that the user gone her desire routes
   if (user) {
