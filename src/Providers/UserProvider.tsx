@@ -26,7 +26,7 @@ export const UserProvider = ({
   initialUser?: IUser | null;
   children: React.ReactNode;
 }) => {
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<IUser | null>(initialUser ?? null);
 
   useEffect(() => {
     const revalidateUser = async () => {

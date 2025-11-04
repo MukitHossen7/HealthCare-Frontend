@@ -27,6 +27,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // console.log(user);
   const navMainItems = [];
 
+  // / Derive the final items array without mutation
+  // const navItems = useMemo(() => {
+  //   if (user?.role === "ADMIN") {
+  //     return [
+  //       ...items,
+  //       {
+  //         title: "Manage Doctors",
+  //         url: "/admin/dashboard/manage-doctors",
+  //         icon: IconSettings,
+  //       },
+  //       {
+  //         title: "Manage Patients",
+  //         url: "/admin/dashboard/manage-patients",
+  //         icon: IconUsers,
+  //       },
+  //     ];
+  //   }
+  //   return items;
+  // }, [items, user?.role]);
+
   if (user?.role === "ADMIN") {
     navMainItems.push(
       {

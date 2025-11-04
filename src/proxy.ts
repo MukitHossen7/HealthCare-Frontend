@@ -11,7 +11,7 @@ interface IDecodedUser {
 
 const authRoutes = ["/login", "/register", "/forgot-password"];
 const roleBaseRoutes = {
-  ADMIN: ["/admin/dashboard"],
+  ADMIN: ["/admin/dashboard", "/admin/dashboard/manage-doctors"],
   DOCTOR: ["/doctor/dashboard"],
   PATIENT: ["/patient/dashboard"],
 };
@@ -19,20 +19,21 @@ const roleBaseRoutes = {
 export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
+
   const { pathname } = request.nextUrl;
 
-  // if token is not available
+  // no token => redirect to login
   if (!accessToken && !refreshToken && !authRoutes.includes(pathname)) {
     return NextResponse.redirect(
       new URL(`/login?redirect=${pathname}`, request.url)
     );
   }
 
-  // if token is available
+  // try to decode access token
   let user: IDecodedUser | null = null;
   if (accessToken) {
     try {
-      user = jwtDecode(accessToken);
+      user = jwtDecode<IDecodedUser>(accessToken);
     } catch (error) {
       console.error(error);
       return NextResponse.redirect(
@@ -41,43 +42,42 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // if not available user/accessToken but refreshToken is available
-  // if (!user && refreshToken) {
-  //   try {
-  //     const refreshRes = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ refreshToken }),
-  //       }
-  //     );
-  //     if (refreshRes.ok) {
-  //       const newAccessToken = request.cookies.get("accessToken")?.value;
-  //       user = jwtDecode(newAccessToken!);
-  //       return NextResponse.next();
-  //     } else {
-  //       const response = NextResponse.redirect(
-  //         new URL(`/login?redirect=${pathname}`, request.url)
-  //       );
-  //       response.cookies.delete("accessToken");
-  //       response.cookies.delete("refreshToken");
-  //       return response;
-  //     }
-  //   } catch (error) {
-  //     console.log("Error refreshing token", error);
-  //     const response = NextResponse.redirect(
-  //       new URL(`/login?redirect=${pathname}`, request.url)
-  //     );
-  //     response.cookies.delete("accessToken");
-  //     response.cookies.delete("refreshToken");
-  //     return response;
-  //   }
-  // }
-
-  //If user is available that the user gone her desire routes
+  // if access token expired but refresh token exists
+  if (user && user!.exp * 1000 < Date.now() && refreshToken) {
+    try {
+      const refreshRes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      if (refreshRes.ok) {
+        const newAccessToken = request.cookies.get("accessToken")?.value;
+        user = jwtDecode(newAccessToken!);
+        return NextResponse.next();
+      } else {
+        const response = NextResponse.redirect(
+          new URL(`/login?redirect=${pathname}`, request.url)
+        );
+        response.cookies.delete("accessToken");
+        response.cookies.delete("refreshToken");
+        return response;
+      }
+    } catch (err) {
+      console.log("Error refreshing token:", err);
+      const response = NextResponse.redirect(
+        new URL(`/login?redirect=${pathname}`, request.url)
+      );
+      response.cookies.delete("accessToken");
+      response.cookies.delete("refreshToken");
+      return response;
+    }
+  }
+  // role-based route check
   if (user) {
     const allowedRoutes = user ? roleBaseRoutes[user.role] : [];
 
@@ -86,12 +86,14 @@ export async function proxy(request: NextRequest) {
       allowedRoutes.some((route) => pathname.startsWith(route))
     ) {
       return NextResponse.next();
+    } else if (authRoutes.includes(pathname)) {
+      return NextResponse.redirect(new URL("/", request.url));
     } else {
       return NextResponse.redirect(new URL(`/unauthorized`, request.url));
     }
   }
 
-  //if user exists but user go to login page this is bad
+  // if already logged in but visiting login page
   if (user && authRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }

@@ -24,7 +24,7 @@ export const createDoctor = async (formData: FormData) => {
     credentials: "include",
     body: formData,
   });
-  if (!res.ok) {
+  if (res.ok) {
     throw new Error("failed to create doctor");
   }
   const data = await res.json();
