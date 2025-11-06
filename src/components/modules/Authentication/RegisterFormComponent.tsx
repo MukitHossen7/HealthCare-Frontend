@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,19 +7,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { registerPatient } from "@/services/auth/registerPatient";
 import Link from "next/link";
 import { useActionState } from "react";
 
 const RegisterFormComponent = () => {
-  const [state, formAction, isPending] = useActionState(
-    (currentState: any, formData: any) => {
-      console.log(currentState, "currentState");
-      console.log(formData.get("email"), "formData");
-    },
-    null
-  );
+  const [state, formAction, isPending] = useActionState(registerPatient, null);
   console.log(state, "state");
-  console.log(isPending, "isPending");
 
   return (
     <form action={formAction}>
@@ -94,11 +88,42 @@ const RegisterFormComponent = () => {
               </FieldDescription>
             )} */}
           </Field>
+          {/* Gender */}
+          <Field>
+            <FieldLabel>Gender</FieldLabel>
+            <div className="flex items-center gap-6 mt-2">
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="radio"
+                  id="male"
+                  name="gender"
+                  value="MALE"
+                  className="w-4 h-4 accent-blue-600"
+                />
+                <Label htmlFor="male" className="text-sm font-medium">
+                  Male
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="radio"
+                  id="female"
+                  name="gender"
+                  value="FEMALE"
+                  className="w-4 h-4 accent-blue-600"
+                />
+                <Label htmlFor="female" className="text-sm font-medium">
+                  Female
+                </Label>
+              </div>
+            </div>
+          </Field>
         </div>
         <FieldGroup className="mt-2">
           <Field>
-            <Button type="submit">
-              {/* {isPending ? "Creating Account..." : "Create Account"} */}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Creating Account..." : "Create Account"}
               submit
             </Button>
 
