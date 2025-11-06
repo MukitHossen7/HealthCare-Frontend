@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,10 +9,21 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useActionState } from "react";
 
 const RegisterFormComponent = () => {
+  const [state, formAction, isPending] = useActionState(
+    (currentState: any, formData: any) => {
+      console.log(currentState, "currentState");
+      console.log(formData.get("email"), "formData");
+    },
+    null
+  );
+  console.log(state, "state");
+  console.log(isPending, "isPending");
+
   return (
-    <form>
+    <form action={formAction}>
       <FieldGroup>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Name */}
