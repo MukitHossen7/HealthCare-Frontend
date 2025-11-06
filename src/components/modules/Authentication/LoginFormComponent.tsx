@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +14,15 @@ import { useActionState } from "react";
 
 const LoginFormComponent = () => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
-  console.log(state);
+  const getFieldError = (fieldName: string) => {
+    if (state && state.errors) {
+      const error = state.errors.find((err: any) => err.field === fieldName);
+      return error.message;
+    } else {
+      return null;
+    }
+  };
+  // console.log(state);
   return (
     <form action={formAction}>
       <FieldGroup>
@@ -26,14 +35,14 @@ const LoginFormComponent = () => {
               name="email"
               type="email"
               placeholder="m@example.com"
-              //   required
+              // required
             />
 
-            {/* {getFieldError("email") && (
-              <FieldDescription className="text-red-600">
+            {getFieldError("email") && (
+              <span className="text-red-600 font-medium text-xs -mt-2">
                 {getFieldError("email")}
-              </FieldDescription>
-            )} */}
+              </span>
+            )}
           </Field>
 
           {/* Password */}
@@ -44,13 +53,13 @@ const LoginFormComponent = () => {
               name="password"
               type="password"
               placeholder="Enter your password"
-              //   required
+              // required
             />
-            {/* {getFieldError("password") && (
-              <FieldDescription className="text-red-600">
+            {getFieldError("password") && (
+              <span className="text-red-600 font-medium text-xs -mt-2">
                 {getFieldError("password")}
-              </FieldDescription>
-            )} */}
+              </span>
+            )}
           </Field>
         </div>
         <FieldGroup className="mt-4">
