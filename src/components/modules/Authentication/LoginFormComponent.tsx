@@ -7,11 +7,15 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { loginUser } from "@/services/auth/loginUser";
 import Link from "next/link";
+import { useActionState } from "react";
 
 const LoginFormComponent = () => {
+  const [state, formAction, isPending] = useActionState(loginUser, null);
+  console.log(state);
   return (
-    <form>
+    <form action={formAction}>
       <FieldGroup>
         <div className="grid grid-cols-1 gap-4">
           {/* Email */}
@@ -51,8 +55,8 @@ const LoginFormComponent = () => {
         </div>
         <FieldGroup className="mt-4">
           <Field>
-            <Button type="submit">
-              {/* {isPending ? "Logging in..." : "Login"} */}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Logging in..." : "Login"}
               Submit
             </Button>
 
