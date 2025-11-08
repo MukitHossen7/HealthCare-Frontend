@@ -81,7 +81,7 @@ export const registerPatient = async (
         body: newFormData,
       }
     );
-    const data = res.json();
+    const data = await res.json();
     return data;
   } catch (error) {
     console.log(error);
