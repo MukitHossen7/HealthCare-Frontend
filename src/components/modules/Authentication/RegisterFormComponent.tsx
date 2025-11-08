@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,19 @@ import { useActionState } from "react";
 
 const RegisterFormComponent = () => {
   const [state, formAction, isPending] = useActionState(registerPatient, null);
-  console.log(state, "state");
+  const getFieldError = (fieldName: string) => {
+    if (state && state?.errors) {
+      const error = state.errors.find((err: any) => err.field === fieldName);
+      if (error) {
+        return error.message;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  };
+  console.log(state);
 
   return (
     <form action={formAction}>
@@ -24,11 +37,11 @@ const RegisterFormComponent = () => {
           <Field>
             <FieldLabel htmlFor="name">Full Name</FieldLabel>
             <Input id="name" name="name" type="text" placeholder="John Doe" />
-            {/* {getFieldError("name") && (
-              <FieldDescription className="text-red-600">
+            {getFieldError("name") && (
+              <span className="text-red-600 font-medium text-xs -mt-2">
                 {getFieldError("name")}
-              </FieldDescription>
-            )} */}
+              </span>
+            )}
           </Field>
           {/* Address */}
           <Field>
@@ -40,11 +53,11 @@ const RegisterFormComponent = () => {
               placeholder="123 Main St"
             />
 
-            {/* {getFieldError("address") && (
-              <FieldDescription className="text-red-600">
+            {getFieldError("address") && (
+              <span className="text-red-600 font-medium text-xs -mt-2">
                 {getFieldError("address")}
-              </FieldDescription>
-            )} */}
+              </span>
+            )}
           </Field>
           {/* Email */}
           <Field>
@@ -56,22 +69,22 @@ const RegisterFormComponent = () => {
               placeholder="m@example.com"
             />
 
-            {/* {getFieldError("email") && (
-              <FieldDescription className="text-red-600">
+            {getFieldError("email") && (
+              <span className="text-red-600 font-medium text-xs -mt-2">
                 {getFieldError("email")}
-              </FieldDescription>
-            )} */}
+              </span>
+            )}
           </Field>
           {/* Password */}
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input id="password" name="password" type="password" />
 
-            {/* {getFieldError("password") && (
-              <FieldDescription className="text-red-600">
+            {getFieldError("password") && (
+              <span className="text-red-600 font-medium text-xs -mt-2">
                 {getFieldError("password")}
-              </FieldDescription>
-            )} */}
+              </span>
+            )}
           </Field>
           {/* Confirm Password */}
           <Field className="md:col-span-2">
@@ -82,11 +95,11 @@ const RegisterFormComponent = () => {
               type="password"
             />
 
-            {/* {getFieldError("confirmPassword") && (
-              <FieldDescription className="text-red-600">
+            {getFieldError("confirmPassword") && (
+              <span className="text-red-600 font-medium text-xs -mt-2">
                 {getFieldError("confirmPassword")}
-              </FieldDescription>
-            )} */}
+              </span>
+            )}
           </Field>
           {/* Gender */}
           <Field>
@@ -118,13 +131,17 @@ const RegisterFormComponent = () => {
                 </Label>
               </div>
             </div>
+            {getFieldError("gender") && (
+              <span className="text-red-600 font-medium text-xs -mt-2">
+                {getFieldError("gender")}
+              </span>
+            )}
           </Field>
         </div>
         <FieldGroup className="mt-2">
           <Field>
             <Button type="submit" disabled={isPending}>
               {isPending ? "Creating Account..." : "Create Account"}
-              submit
             </Button>
 
             <FieldDescription className="px-6 text-center">

@@ -15,14 +15,18 @@ import { useActionState } from "react";
 const LoginFormComponent = () => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
   const getFieldError = (fieldName: string) => {
-    if (state && state.errors) {
+    if (state && state?.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
-      return error.message;
+      if (error) {
+        return error.message;
+      } else {
+        return null;
+      }
     } else {
       return null;
     }
   };
-  // console.log(state);
+  console.log(state);
   return (
     <form action={formAction}>
       <FieldGroup>
@@ -66,7 +70,6 @@ const LoginFormComponent = () => {
           <Field>
             <Button type="submit" disabled={isPending}>
               {isPending ? "Logging in..." : "Login"}
-              Submit
             </Button>
 
             <FieldDescription className="px-6 text-center">
