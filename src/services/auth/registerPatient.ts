@@ -6,25 +6,27 @@ import * as z from "zod";
 const registerPatientZodSchema = z
   .object({
     name: z.string().min(1, { error: "Name is required." }),
-    email: z.email().min(1, { error: "Address is required." }),
+    email: z.email({ error: "Email is required." }),
     address: z.string().min(1, { error: "Address is required." }),
 
     password: z
       .string()
-      .min(6, { message: "Password must be at least 6 characters long." })
-      .max(10, { message: "Password cannot exceed 10 characters." })
+      .min(6, { error: "Password must be at least 6 characters long." })
+      .max(10, { error: "Password cannot exceed 10 characters." })
       .regex(/[A-Z]/, {
-        message: "Password must contain at least one uppercase letter.",
+        error: "Password must contain at least one uppercase letter.",
       })
       .regex(/[a-z]/, {
-        message: "Password must contain at least one lowercase letter.",
+        error: "Password must contain at least one lowercase letter.",
       })
-      .regex(/[0-9]/, { message: "Password must contain at least one number." })
+      .regex(/[0-9]/, { error: "Password must contain at least one number." })
       .regex(/[@$!%*?&]/, {
-        message: "Password must contain at least one special character.",
+        error: "Password must contain at least one special character.",
       }),
 
-    confirmPassword: z.string(),
+    confirmPassword: z
+      .string()
+      .min(6, { error: "Confirm password is required" }),
     gender: z.enum(["MALE", "FEMALE"], {
       error: "Please select your gender.",
     }),
