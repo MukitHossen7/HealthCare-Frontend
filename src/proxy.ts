@@ -3,83 +3,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-
-export type UserRole = "ADMIN" | "DOCTOR" | "PATIENT";
-
-type RouteConfig = {
-  exact: string[];
-  patterns: RegExp[];
-};
-
-const authRoutes = [
-  "/login",
-  "/register",
-  "/forget-password",
-  "/reset-password",
-];
-
-const commonProtectedRoutes: RouteConfig = {
-  exact: ["/my-profile", "/setting"],
-  patterns: [],
-};
-
-const doctorProtectedRoutes: RouteConfig = {
-  patterns: [/^\/doctor/],
-  exact: [],
-};
-
-const adminProtectedRoutes: RouteConfig = {
-  patterns: [/^\/admin/],
-  exact: [],
-};
-const patientProtectedRoutes: RouteConfig = {
-  patterns: [/^\/dashboard/],
-  exact: [],
-};
-
-const isAuthRoutes = (pathname: string) => {
-  return authRoutes.some((route) => route === pathname);
-};
-
-const isRoutesMatches = (pathname: string, routes: RouteConfig) => {
-  if (routes.exact.includes(pathname)) {
-    return true;
-  }
-  if (routes.patterns.some((pattern: RegExp) => pattern.test(pathname))) {
-    return true;
-  }
-};
-
-const getRouteOwner = (
-  pathname: string
-): "ADMIN" | "PATIENT" | "DOCTOR" | "COMMON" | null => {
-  if (isRoutesMatches(pathname, adminProtectedRoutes)) {
-    return "ADMIN";
-  }
-  if (isRoutesMatches(pathname, patientProtectedRoutes)) {
-    return "PATIENT";
-  }
-  if (isRoutesMatches(pathname, doctorProtectedRoutes)) {
-    return "DOCTOR";
-  }
-  if (isRoutesMatches(pathname, commonProtectedRoutes)) {
-    return "COMMON";
-  }
-  return null;
-};
-
-const getDefaultDashboardRoutes = (role: UserRole): string => {
-  if (role === "ADMIN") {
-    return "/admin/dashboard";
-  }
-  if (role === "DOCTOR") {
-    return "/doctor/dashboard";
-  }
-  if (role === "PATIENT") {
-    return "/dashboard";
-  }
-  return "/";
-};
+import {
+  getDefaultDashboardRoutes,
+  getRouteOwner,
+  isAuthRoutes,
+  UserRole,
+} from "./utility/auth-utils";
 
 export async function proxy(request: NextRequest) {
   const cookieStore = await cookies();
