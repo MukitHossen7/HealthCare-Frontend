@@ -12,19 +12,6 @@ import {
   UserRole,
 } from "@/utility/auth-utils";
 
-// const getDefaultDashboardRoutes = (role: UserRole): string => {
-//   if (role === "ADMIN") {
-//     return "/admin/dashboard";
-//   }
-//   if (role === "DOCTOR") {
-//     return "/doctor/dashboard";
-//   }
-//   if (role === "PATIENT") {
-//     return "/dashboard";
-//   }
-//   return "/";
-// };
-
 const loginValidationZodSchema = z.object({
   email: z.email({
     error: "Please enter a valid email address.",
@@ -69,7 +56,7 @@ export const loginUser = async (
       },
       body: JSON.stringify(loginData),
     });
-    // const data = await res.json();
+    const data = await res.json();
 
     const setCookieHeaders = res.headers.getSetCookie();
     if (setCookieHeaders && setCookieHeaders.length > 0) {
@@ -119,6 +106,10 @@ export const loginUser = async (
     }
     const userRole = verifyToken.role as UserRole;
 
+    if (!data?.success) {
+      throw new Error("Login failed");
+    }
+
     if (redirectTo) {
       const requestedPath = redirectTo.toString();
       if (isValidRedirectForRole(requestedPath, userRole)) {
@@ -126,6 +117,8 @@ export const loginUser = async (
       } else {
         redirect(getDefaultDashboardRoutes(userRole));
       }
+    } else {
+      redirect(getDefaultDashboardRoutes(userRole));
     }
 
     // const redirectPath = redirectTo

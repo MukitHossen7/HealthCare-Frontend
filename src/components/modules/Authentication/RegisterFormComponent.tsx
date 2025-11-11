@@ -27,7 +27,7 @@ const RegisterFormComponent = () => {
       return null;
     }
   };
-  console.log(state);
+  // console.log(state);
 
   return (
     <form action={formAction}>

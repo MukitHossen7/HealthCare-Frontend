@@ -2,6 +2,7 @@
 "use server";
 
 import * as z from "zod";
+import { loginUser } from "./loginUser";
 
 const registerPatientZodSchema = z
   .object({
@@ -82,8 +83,14 @@ export const registerPatient = async (
       }
     );
     const data = await res.json();
+    if (data.success) {
+      await loginUser(_currentState, formData);
+    }
     return data;
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+      throw error;
+    }
     console.log(error);
     return {
       error: "Registration failed",
