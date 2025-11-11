@@ -12,11 +12,11 @@ import { loginUser } from "@/services/auth/loginUser";
 import Link from "next/link";
 import { useActionState } from "react";
 
-const LoginFormComponent = () => {
+const LoginFormComponent = ({ redirect }: { redirect: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
   const getFieldError = (fieldName: string) => {
     if (state && state?.errors) {
-      const error = state.errors.find((err: any) => err.field === fieldName);
+      const error = state?.errors.find((err: any) => err.field === fieldName);
       if (error) {
         return error.message;
       } else {
@@ -26,9 +26,11 @@ const LoginFormComponent = () => {
       return null;
     }
   };
-  console.log(state);
+  // console.log("state", state);
+  // console.log("redirect", redirect);
   return (
     <form action={formAction}>
+      {redirect && <input type="hidden" name="redirect" value={redirect} />}
       <FieldGroup>
         <div className="grid grid-cols-1 gap-4">
           {/* Email */}

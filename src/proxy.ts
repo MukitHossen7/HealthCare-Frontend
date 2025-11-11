@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-type UserRole = "ADMIN" | "DOCTOR" | "PATIENT";
+export type UserRole = "ADMIN" | "DOCTOR" | "PATIENT";
 
 type RouteConfig = {
   exact: string[];
@@ -103,24 +103,46 @@ export async function proxy(request: NextRequest) {
   const routeOwner = getRouteOwner(pathname);
   const isAuth = isAuthRoutes(pathname);
 
-  // Role: 1
+  // Rule: 1
   if (accessToken && isAuth) {
     return NextResponse.redirect(
       new URL(getDefaultDashboardRoutes(userRole as UserRole), request.url)
     );
   }
-  // Role: 2
+  // Rule: 2
   if (routeOwner === null) {
     return NextResponse.next();
   }
 
-  //Role : 3
+  if (!accessToken) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
+
+    // return NextResponse.redirect(
+    //   new URL(`/login?redirect=${pathname}`, request.url)
+    // );
+  }
+
+  //Rule : 3
   if (routeOwner === "COMMON") {
-    if (!accessToken) {
-      return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.next();
+  }
+
+  // Rule : 4
+  if (
+    routeOwner === "ADMIN" ||
+    routeOwner === "DOCTOR" ||
+    routeOwner === "PATIENT"
+  ) {
+    if (routeOwner !== userRole) {
+      return NextResponse.redirect(
+        new URL(getDefaultDashboardRoutes(userRole as UserRole), request.url)
+      );
     }
     return NextResponse.next();
   }
+
   return NextResponse.next();
 }
 

@@ -3,6 +3,23 @@
 import * as z from "zod";
 import { parse } from "cookie";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import { UserRole } from "@/proxy";
+
+const getDefaultDashboardRoutes = (role: UserRole): string => {
+  if (role === "ADMIN") {
+    return "/admin/dashboard";
+  }
+  if (role === "DOCTOR") {
+    return "/doctor/dashboard";
+  }
+  if (role === "PATIENT") {
+    return "/dashboard";
+  }
+  return "/";
+};
 
 const loginValidationZodSchema = z.object({
   email: z.email({
@@ -19,6 +36,8 @@ export const loginUser = async (
   formData: any
 ): Promise<any> => {
   try {
+    const redirectTo = formData.get("redirect") || null;
+    console.log("services auth", redirectTo);
     let accessTokenObject: null | any = null;
     let refreshTokenObject: null | any = null;
     const loginData = {
@@ -46,7 +65,7 @@ export const loginUser = async (
       },
       body: JSON.stringify(loginData),
     });
-    const data = await res.json();
+    // const data = await res.json();
 
     const setCookieHeaders = res.headers.getSetCookie();
     if (setCookieHeaders && setCookieHeaders.length > 0) {
@@ -87,8 +106,24 @@ export const loginUser = async (
       sameSite: refreshTokenObject["SameSite"] || "none",
     });
 
-    return data;
-  } catch (error) {
+    const verifyToken: JwtPayload | string = jwt.verify(
+      accessTokenObject.accessToken,
+      process.env.ACCESS_TOKEN_SECRET as string
+    );
+    if (typeof verifyToken === "string") {
+      throw new Error("Invalid token");
+    }
+    const userRole = verifyToken.role as UserRole;
+    const redirectPath = redirectTo
+      ? redirectTo
+      : getDefaultDashboardRoutes(userRole);
+    redirect(redirectPath);
+
+    // return data;
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+      throw error;
+    }
     console.log(error);
     return {
       error: "Login User",
