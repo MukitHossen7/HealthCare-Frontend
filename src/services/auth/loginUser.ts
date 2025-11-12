@@ -2,7 +2,6 @@
 "use server";
 import * as z from "zod";
 import { parse } from "cookie";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
@@ -11,6 +10,7 @@ import {
   isValidRedirectForRole,
   UserRole,
 } from "@/utility/auth-utils";
+import { setCookies } from "./tokenHandler";
 
 const loginValidationZodSchema = z.object({
   email: z.email({
@@ -28,7 +28,6 @@ export const loginUser = async (
 ): Promise<any> => {
   try {
     const redirectTo = formData.get("redirect") || null;
-    console.log("services auth", redirectTo);
     let accessTokenObject: null | any = null;
     let refreshTokenObject: null | any = null;
     const loginData = {
@@ -79,8 +78,8 @@ export const loginUser = async (
     if (!refreshTokenObject) {
       throw new Error("Tokens not found in cookies");
     }
-    const cookieStore = await cookies();
-    cookieStore.set("accessToken", accessTokenObject.accessToken, {
+
+    await setCookies("accessToken", accessTokenObject.accessToken, {
       httpOnly: true,
       secure: true,
       maxAge: parseInt(accessTokenObject["Max-Age"]) || 1000 * 60 * 60,
@@ -88,7 +87,7 @@ export const loginUser = async (
       sameSite: accessTokenObject["SameSite"] || "none",
     });
 
-    cookieStore.set("refreshToken", refreshTokenObject.refreshToken, {
+    await setCookies("refreshToken", refreshTokenObject.refreshToken, {
       secure: true,
       httpOnly: true,
       maxAge:
