@@ -1,9 +1,7 @@
-import DoctorTable from "@/components/modules/Dashboard/Doctor/DoctorTable";
-
 const ManageDoctorsPage = () => {
   return (
     <>
-      <DoctorTable />
+      <h1 className="text-2xl font-bold mb-4">Manage Doctors</h1>
     </>
   );
 };

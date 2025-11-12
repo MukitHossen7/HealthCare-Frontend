@@ -10,8 +10,7 @@ const PublicNavbar = ({ accessToken }: { accessToken: string }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const handleLogout = async () => {
-    const data = await logoutUser();
-    console.log(data, "logout data");
+    await logoutUser();
   };
   return (
     <nav className="bg-white/98 sticky top-0 z-50 backdrop-blur-2xl">

@@ -22,6 +22,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
+import { LockKeyholeOpen } from "lucide-react";
+
+import { logoutUser } from "@/services/auth/logoutUser";
 
 export function NavUser({
   user,
@@ -33,6 +37,10 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+
+  const handleLogout = async () => {
+    await logoutUser();
+  };
 
   return (
     <SidebarMenu>
@@ -78,13 +86,22 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
-              </DropdownMenuItem>
+              <Link href="/my-profile">
+                <DropdownMenuItem>
+                  <IconUserCircle />
+                  Account
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/change-password">
+                <DropdownMenuItem>
+                  <LockKeyholeOpen />
+                  Change Password
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+
+            <DropdownMenuItem onClick={handleLogout}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

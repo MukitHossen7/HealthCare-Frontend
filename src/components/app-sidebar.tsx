@@ -20,11 +20,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { useUser } from "@/Providers/UserProvider";
+import { IAuthUser } from "@/types/user.interface";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useUser();
-  // console.log(user);
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  authData: IAuthUser;
+}
+
+export function AppSidebar({ authData, ...props }: AppSidebarProps) {
   const navMainItems = [];
 
   // / Derive the final items array without mutation
@@ -47,39 +49,57 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   //   return items;
   // }, [items, user?.role]);
 
-  if (user?.role === "ADMIN") {
-    navMainItems.push(
-      {
-        title: "Dashboard",
-        url: "/admin/dashboard",
-        icon: IconDashboard,
-      },
-      {
-        title: "Manage Doctors",
-        url: "/admin/dashboard/manage-doctors",
-        icon: IconUsers,
-      },
-      {
-        title: "Manage Patients",
-        url: "/admin/dashboard/manage-patients",
-        icon: IconUsers,
-      }
-    );
-  }
-
-  if (user?.role === "DOCTOR") {
-    navMainItems.push({
+  navMainItems.push(
+    {
       title: "Dashboard",
-      url: "/doctor/dashboard",
+      url: "/admin/dashboard",
       icon: IconDashboard,
-    });
-  }
+    },
+    {
+      title: "Manage Doctors",
+      url: "/admin/dashboard/manage-doctors",
+      icon: IconUsers,
+    },
+    {
+      title: "Manage Patients",
+      url: "/admin/dashboard/manage-patients",
+      icon: IconUsers,
+    }
+  );
+
+  // if (user?.role === "ADMIN") {
+  //   navMainItems.push(
+  //     {
+  //       title: "Dashboard",
+  //       url: "/admin/dashboard",
+  //       icon: IconDashboard,
+  //     },
+  //     {
+  //       title: "Manage Doctors",
+  //       url: "/admin/dashboard/manage-doctors",
+  //       icon: IconUsers,
+  //     },
+  //     {
+  //       title: "Manage Patients",
+  //       url: "/admin/dashboard/manage-patients",
+  //       icon: IconUsers,
+  //     }
+  //   );
+  // }
+
+  // if (user?.role === "DOCTOR") {
+  //   navMainItems.push({
+  //     title: "Dashboard",
+  //     url: "/doctor/dashboard",
+  //     icon: IconDashboard,
+  //   });
+  // }
 
   const data = {
     user: {
-      name: user?.name ?? "Example",
-      email: user?.email ?? "m@example.com",
-      avatar: user?.profilePhoto ?? "https://i.ibb.co/nMxbRbGP/download.png",
+      name: "Example",
+      email: authData?.email || "m@example.com",
+      avatar: "https://i.ibb.co/nMxbRbGP/download.png",
     },
     navMain: navMainItems,
 

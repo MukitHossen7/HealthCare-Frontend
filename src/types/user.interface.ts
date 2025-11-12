@@ -1,3 +1,9 @@
+export interface IAuthUser {
+  id: string;
+  email: string;
+  role: "ADMIN" | "DOCTOR" | "PATIENT";
+}
+
 export interface IUser {
   id: string;
   email: string;
