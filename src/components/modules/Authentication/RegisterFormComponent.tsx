@@ -36,8 +36,6 @@ const RegisterFormComponent = () => {
     }
   }, [state]);
 
-  // console.log(state);
-
   return (
     <form action={formAction}>
       <FieldGroup>
