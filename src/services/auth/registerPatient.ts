@@ -86,6 +86,9 @@ export const registerPatient = async (
     if (data.success) {
       await loginUser(_currentState, formData);
     }
+    if (!data.success) {
+      throw new Error(data.message || "Registration failed");
+    }
     return data;
   } catch (error: any) {
     if (error?.digest?.startsWith("NEXT_REDIRECT")) {
@@ -93,7 +96,8 @@ export const registerPatient = async (
     }
     console.log(error);
     return {
-      error: "Registration failed",
+      success: false,
+      error: error.message || "Registration failed",
     };
   }
 };

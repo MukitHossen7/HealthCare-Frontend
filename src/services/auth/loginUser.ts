@@ -106,7 +106,7 @@ export const loginUser = async (
     const userRole = verifyToken.role as UserRole;
 
     if (!data?.success) {
-      throw new Error("Login failed");
+      throw new Error(data.message || "Login failed");
     }
 
     if (redirectTo) {
@@ -132,7 +132,8 @@ export const loginUser = async (
     }
     console.log(error);
     return {
-      error: "Login User",
+      success: false,
+      error: error.message || "Login User",
     };
   }
 };

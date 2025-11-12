@@ -6,5 +6,5 @@ import { deleteCookies } from "./tokenHandler";
 export const logoutUser = async () => {
   await deleteCookies("accessToken");
   await deleteCookies("refreshToken");
-  redirect("/");
+  redirect("/login?loggedOut=true");
 };

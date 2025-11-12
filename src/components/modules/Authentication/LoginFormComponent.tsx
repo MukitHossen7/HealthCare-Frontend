@@ -10,7 +10,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginUser } from "@/services/auth/loginUser";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 
 const LoginFormComponent = ({ redirect }: { redirect: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
@@ -26,8 +27,12 @@ const LoginFormComponent = ({ redirect }: { redirect: string }) => {
       return null;
     }
   };
-  // console.log("state", state);
-  // console.log("redirect", redirect);
+  useEffect(() => {
+    if (state && !state.success) {
+      toast.error("Login failed. Please check your credentials.");
+    }
+  }, [state]);
+
   return (
     <form action={formAction}>
       {redirect && <input type="hidden" name="redirect" value={redirect} />}

@@ -9,10 +9,9 @@ import { logoutUser } from "@/services/auth/logoutUser";
 const PublicNavbar = ({ accessToken }: { accessToken: string }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  console.log(accessToken);
   const handleLogout = async () => {
-    await logoutUser();
+    const data = await logoutUser();
+    console.log(data, "logout data");
   };
   return (
     <nav className="bg-white/98 sticky top-0 z-50 backdrop-blur-2xl">
