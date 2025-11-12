@@ -5,8 +5,15 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { logoutUser } from "@/services/auth/logoutUser";
+import { IAuthUser } from "@/types/user.interface";
 
-const PublicNavbar = ({ accessToken }: { accessToken: string }) => {
+const PublicNavbar = ({
+  accessToken,
+  authData,
+}: {
+  accessToken: string;
+  authData: IAuthUser;
+}) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const handleLogout = async () => {
@@ -73,17 +80,46 @@ const PublicNavbar = ({ accessToken }: { accessToken: string }) => {
                 </span>
               </div>
               <ul className="py-2">
-                {accessToken && (
-                  <li>
-                    <Link
-                      href="/admin/dashboard"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
-                )}
+                {/* admin dashboard */}
+                {accessToken &&
+                  authData?.email &&
+                  authData?.role === "ADMIN" && (
+                    <li>
+                      <Link
+                        href="/admin/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
+                  )}
 
+                {/* doctor dashboard */}
+                {accessToken &&
+                  authData?.email &&
+                  authData?.role === "DOCTOR" && (
+                    <li>
+                      <Link
+                        href="/doctor/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
+                  )}
+                {/* patient dashboard */}
+                {accessToken &&
+                  authData?.email &&
+                  authData?.role === "PATIENT" && (
+                    <li>
+                      <Link
+                        href="/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
+                  )}
                 <li>
                   <button
                     onClick={handleLogout}

@@ -49,57 +49,72 @@ export function AppSidebar({ authData, ...props }: AppSidebarProps) {
   //   return items;
   // }, [items, user?.role]);
 
-  navMainItems.push(
-    {
-      title: "Dashboard",
-      url: "/admin/dashboard",
-      icon: IconDashboard,
-    },
-    {
-      title: "Manage Doctors",
-      url: "/admin/dashboard/manage-doctors",
-      icon: IconUsers,
-    },
-    {
-      title: "Manage Patients",
-      url: "/admin/dashboard/manage-patients",
-      icon: IconUsers,
-    }
-  );
+  if (authData?.role === "ADMIN") {
+    navMainItems.push(
+      {
+        title: "Dashboard",
+        url: "/admin/dashboard",
+        icon: IconDashboard,
+      },
+      {
+        title: "Manage Doctors",
+        url: "/admin/dashboard/manage-doctors",
+        icon: IconUsers,
+      },
+      {
+        title: "Manage Patients",
+        url: "/admin/dashboard/manage-patients",
+        icon: IconUsers,
+      }
+    );
+  }
 
-  // if (user?.role === "ADMIN") {
-  //   navMainItems.push(
-  //     {
-  //       title: "Dashboard",
-  //       url: "/admin/dashboard",
-  //       icon: IconDashboard,
-  //     },
-  //     {
-  //       title: "Manage Doctors",
-  //       url: "/admin/dashboard/manage-doctors",
-  //       icon: IconUsers,
-  //     },
-  //     {
-  //       title: "Manage Patients",
-  //       url: "/admin/dashboard/manage-patients",
-  //       icon: IconUsers,
-  //     }
-  //   );
-  // }
+  if (authData?.role === "DOCTOR") {
+    navMainItems.push(
+      {
+        title: "Dashboard",
+        url: "/doctor/dashboard",
+        icon: IconDashboard,
+      },
+      {
+        title: "Appointments",
+        url: "/doctor/dashboard/appointments",
+        icon: IconDashboard,
+      },
+      {
+        title: "My Schedule",
+        url: "/doctor/dashboard/my-schedules",
+        icon: IconDashboard,
+      }
+    );
+  }
 
-  // if (user?.role === "DOCTOR") {
-  //   navMainItems.push({
-  //     title: "Dashboard",
-  //     url: "/doctor/dashboard",
-  //     icon: IconDashboard,
-  //   });
-  // }
+  if (authData?.role === "PATIENT") {
+    navMainItems.push(
+      {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: IconDashboard,
+      },
+      {
+        title: "My Appointments",
+        url: "/dashboard/my-appointments",
+        icon: IconDashboard,
+      },
+      {
+        title: "My Prescriptions",
+        url: "dashboard/my-prescriptions",
+        icon: IconDashboard,
+      }
+    );
+  }
 
   const data = {
     user: {
       name: "Example",
       email: authData?.email || "m@example.com",
       avatar: "https://i.ibb.co/nMxbRbGP/download.png",
+      role: authData?.role,
     },
     navMain: navMainItems,
 

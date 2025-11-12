@@ -1,3 +1,5 @@
+"use server";
+
 import { IAuthUser } from "@/types/user.interface";
 import { getCookies } from "./tokenHandler";
 import jwt, { JwtPayload } from "jsonwebtoken";
