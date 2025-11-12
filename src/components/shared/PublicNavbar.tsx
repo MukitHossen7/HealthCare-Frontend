@@ -4,16 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { useUser } from "@/Providers/UserProvider";
-import logOutUser from "@/utility/logOut";
+import { logoutUser } from "@/services/auth/logoutUser";
 
-// const { user } = await checkAuthStatus();
-
-const PublicNavbar = () => {
+const PublicNavbar = ({ accessToken }: { accessToken: string }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { user } = useUser();
-  // console.log(user);
+
+  console.log(accessToken);
+  const handleLogout = async () => {
+    await logoutUser();
+  };
   return (
     <nav className="bg-white/98 sticky top-0 z-50 backdrop-blur-2xl">
       <div className="w-11/12 md:w-11/12 lg:w-11/12 xl:container flex flex-wrap items-center justify-between mx-auto py-2 lg:py-4">
@@ -37,7 +37,7 @@ const PublicNavbar = () => {
         <div className="flex items-center lg:order-2 space-x-2 lg:space-x-0 rtl:space-x-reverse">
           {/* User Menu */}
           <div className="flex items-center gap-2">
-            {user && user?.email ? (
+            {accessToken ? (
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 type="button"
@@ -47,7 +47,6 @@ const PublicNavbar = () => {
                 <Image
                   className="w-8 h-8 rounded-full"
                   src={
-                    user?.profilePhoto ??
                     "https://flowbite.com/docs/images/people/profile-picture-3.jpg"
                   }
                   alt="user photo"
@@ -67,14 +66,16 @@ const PublicNavbar = () => {
             <div className="absolute top-14 right-4 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600">
               <div className="px-4 py-3">
                 <span className="block text-sm text-gray-900 dark:text-white">
-                  {user?.name}
+                  {/* {user?.name} */}
+                  John Doe
                 </span>
                 <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                  {user?.email}
+                  {/* {user?.email} */}
+                  john@gmail.com
                 </span>
               </div>
               <ul className="py-2">
-                {user && user.role === "ADMIN" && (
+                {accessToken && (
                   <li>
                     <Link
                       href="/admin/dashboard"
@@ -84,21 +85,10 @@ const PublicNavbar = () => {
                     </Link>
                   </li>
                 )}
-                {user && user.role === "DOCTOR" && (
-                  <li>
-                    <Link
-                      href="/doctor/dashboard"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
-                )}
+
                 <li>
                   <button
-                    onClick={() => {
-                      logOutUser();
-                    }}
+                    onClick={handleLogout}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full text-left "
                   >
                     Sign out

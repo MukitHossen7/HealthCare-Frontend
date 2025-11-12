@@ -8,11 +8,13 @@ import {
   isAuthRoutes,
   UserRole,
 } from "./utility/auth-utils";
-import { deleteCookies } from "./services/auth/tokenHandler";
+import { deleteCookies, getCookies } from "./services/auth/tokenHandler";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const accessToken = request.cookies.get("accessToken")?.value || null;
+  // const accessToken = request.cookies.get("accessToken")?.value || null;
+  // console.log("accessToken:", accessToken);
+  const accessToken = await getCookies("accessToken");
 
   let userRole: UserRole | null = null;
   if (accessToken) {
