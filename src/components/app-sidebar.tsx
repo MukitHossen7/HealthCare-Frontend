@@ -1,12 +1,6 @@
 "use client";
 import * as React from "react";
-import {
-  IconDashboard,
-  IconInnerShadowTop,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react";
-
+import { IconInnerShadowTop, IconSettings } from "@tabler/icons-react";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -21,6 +15,18 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { IAuthUser } from "@/types/user.interface";
+import {
+  Activity,
+  Calendar,
+  ClipboardList,
+  Clock,
+  FileText,
+  Hospital,
+  LayoutDashboard,
+  Shield,
+  Stethoscope,
+  Users,
+} from "lucide-react";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   authData: IAuthUser;
@@ -54,17 +60,37 @@ export function AppSidebar({ authData, ...props }: AppSidebarProps) {
       {
         title: "Dashboard",
         url: "/admin/dashboard",
-        icon: IconDashboard,
+        icon: LayoutDashboard,
       },
       {
-        title: "Manage Doctors",
+        title: "Admins",
+        url: "/admin/dashboard/manage-admin",
+        icon: Shield,
+      },
+      {
+        title: "Doctors",
         url: "/admin/dashboard/manage-doctors",
-        icon: IconUsers,
+        icon: Stethoscope,
       },
       {
-        title: "Manage Patients",
+        title: "Patients",
         url: "/admin/dashboard/manage-patients",
-        icon: IconUsers,
+        icon: Users,
+      },
+      {
+        title: "Appointments",
+        url: "/admin/dashboard/manage-appointments",
+        icon: Calendar,
+      },
+      {
+        title: "Schedules",
+        url: "/admin/dashboard/manage-schedules",
+        icon: Clock,
+      },
+      {
+        title: "Specialties",
+        url: "/admin/dashboard/manage-specialities",
+        icon: Hospital,
       }
     );
   }
@@ -74,17 +100,22 @@ export function AppSidebar({ authData, ...props }: AppSidebarProps) {
       {
         title: "Dashboard",
         url: "/doctor/dashboard",
-        icon: IconDashboard,
+        icon: LayoutDashboard,
       },
       {
         title: "Appointments",
         url: "/doctor/dashboard/appointments",
-        icon: IconDashboard,
+        icon: Calendar,
       },
       {
-        title: "My Schedule",
+        title: "My Schedules",
         url: "/doctor/dashboard/my-schedules",
-        icon: IconDashboard,
+        icon: Clock,
+      },
+      {
+        title: "Prescriptions",
+        url: "/doctor/dashboard/prescriptions",
+        icon: FileText,
       }
     );
   }
@@ -94,17 +125,27 @@ export function AppSidebar({ authData, ...props }: AppSidebarProps) {
       {
         title: "Dashboard",
         url: "/dashboard",
-        icon: IconDashboard,
+        icon: LayoutDashboard,
       },
       {
         title: "My Appointments",
         url: "/dashboard/my-appointments",
-        icon: IconDashboard,
+        icon: Calendar,
       },
+      // {
+      //   title: "Book Appointment",
+      //   url: "/dashboard/my-prescriptions",
+      //   icon: ClipboardList,
+      // },
       {
         title: "My Prescriptions",
-        url: "dashboard/my-prescriptions",
-        icon: IconDashboard,
+        url: "/dashboard/my-prescriptions",
+        icon: FileText,
+      },
+      {
+        title: "Health Records",
+        url: "/dashboard/health-records",
+        icon: Activity,
       }
     );
   }

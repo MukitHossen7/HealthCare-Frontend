@@ -1,11 +1,9 @@
-const MyPrescriptionPage = () => {
+const MyPrescriptionsPage = () => {
   return (
-    <>
-      <h1 className="text-4xl text-center py-10">
-        This is My Prescription Page
-      </h1>
-    </>
+    <div>
+      <h1>This is MyPrescriptionsPage</h1>
+    </div>
   );
 };
 
-export default MyPrescriptionPage;
+export default MyPrescriptionsPage;

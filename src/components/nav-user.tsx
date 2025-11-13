@@ -88,13 +88,16 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <Link href="/my-profile">
+              <Link className="font-medium text-gray-700" href="/my-profile">
                 <DropdownMenuItem>
                   <IconUserCircle />
                   Account
                 </DropdownMenuItem>
               </Link>
-              <Link href="/change-password">
+              <Link
+                className="font-medium text-gray-700"
+                href="/change-password"
+              >
                 <DropdownMenuItem>
                   <LockKeyholeOpen />
                   Change Password
@@ -103,7 +106,10 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem
+              className="font-medium text-gray-700"
+              onClick={handleLogout}
+            >
               <IconLogout />
               Log out
             </DropdownMenuItem>
