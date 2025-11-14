@@ -3,6 +3,8 @@
 
 import * as z from "zod";
 import { loginUser } from "./loginUser";
+import { serverFetch } from "@/utility/server-fetch";
+import { zodValidator } from "@/utility/zodValidator";
 
 const registerPatientZodSchema = z
   .object({
@@ -51,37 +53,54 @@ export const registerPatient = async (
       confirmPassword: formData.get("confirmPassword"),
     };
 
-    const validatedFields =
-      registerPatientZodSchema.safeParse(patientSchemaData);
-    if (!validatedFields.success) {
-      return {
-        success: false,
-        errors: validatedFields.error.issues.map((issue) => {
-          return {
-            field: issue.path[0],
-            message: issue.message,
-          };
-        }),
-      };
+    // const validatedFields =
+    //   registerPatientZodSchema.safeParse(patientSchemaData);
+    // if (!validatedFields.success) {
+    //   return {
+    //     success: false,
+    //     errors: validatedFields.error.issues.map((issue) => {
+    //       return {
+    //         field: issue.path[0],
+    //         message: issue.message,
+    //       };
+    //     }),
+    //   };
+    // }
+
+    if (
+      zodValidator(patientSchemaData, registerPatientZodSchema).success ===
+      false
+    ) {
+      return zodValidator(patientSchemaData, registerPatientZodSchema);
     }
+
+    const validatedPayload = zodValidator(
+      patientSchemaData,
+      registerPatientZodSchema
+    ).data;
+
+    // zodValidator(patientSchemaData, registerPatientZodSchema);
+
     const patientData = {
-      password: formData.get("password"),
+      password: validatedPayload?.password,
       patient: {
-        name: formData.get("name"),
-        email: formData.get("email"),
-        address: formData.get("address"),
-        gender: formData.get("gender"),
+        name: validatedPayload?.name,
+        email: validatedPayload?.email,
+        address: validatedPayload?.address,
+        gender: validatedPayload?.gender,
       },
     };
+
     const newFormData = new FormData();
     newFormData.append("data", JSON.stringify(patientData));
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/create-patient`,
-      {
-        method: "POST",
-        body: newFormData,
-      }
-    );
+
+    if (formData.get("file")) {
+      newFormData.append("file", formData.get("file") as Blob);
+    }
+
+    const res = await serverFetch.post("/user/create-patient", {
+      body: newFormData,
+    });
     const data = await res.json();
     if (data.success) {
       await loginUser(_currentState, formData);

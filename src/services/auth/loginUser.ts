@@ -11,6 +11,8 @@ import {
   UserRole,
 } from "@/utility/auth-utils";
 import { setCookies } from "./tokenHandler";
+import { serverFetch } from "@/utility/server-fetch";
+import { zodValidator } from "@/utility/zodValidator";
 
 const loginValidationZodSchema = z.object({
   email: z.email({
@@ -35,25 +37,20 @@ export const loginUser = async (
       email: formData.get("email"),
     };
 
-    const validatedFields = loginValidationZodSchema.safeParse(loginData);
-    if (!validatedFields.success) {
-      return {
-        success: false,
-        errors: validatedFields.error.issues.map((issue) => {
-          return {
-            field: issue.path[0],
-            message: issue.message,
-          };
-        }),
-      };
+    if (zodValidator(loginData, loginValidationZodSchema).success === false) {
+      return zodValidator(loginData, loginValidationZodSchema);
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-      method: "POST",
+    const validatedPayload = zodValidator(
+      loginData,
+      loginValidationZodSchema
+    ).data;
+
+    const res = await serverFetch.post("/auth/login", {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(loginData),
+      body: JSON.stringify(validatedPayload),
     });
     const data = await res.json();
 
