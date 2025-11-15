@@ -28,8 +28,9 @@ const RegisterFormComponent = () => {
       return null;
     }
   };
+
   useEffect(() => {
-    if (state && !state.success) {
+    if (state && !state.success && state.error) {
       toast.error(
         state.error || "Registration failed. Please check your details."
       );

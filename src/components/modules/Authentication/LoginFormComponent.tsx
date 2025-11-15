@@ -28,7 +28,7 @@ const LoginFormComponent = ({ redirect }: { redirect: string }) => {
     }
   };
   useEffect(() => {
-    if (state && !state.success) {
+    if (state && !state.success && state.error) {
       toast.error("Login failed. Please check your credentials.");
     }
   }, [state]);
