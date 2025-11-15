@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,24 +9,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerPatient } from "@/services/auth/registerPatient";
+import { getInputFieldError } from "@/utility/getInputFieldError";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
 const RegisterFormComponent = () => {
   const [state, formAction, isPending] = useActionState(registerPatient, null);
-  const getFieldError = (fieldName: string) => {
-    if (state && state?.errors) {
-      const error = state.errors.find((err: any) => err.field === fieldName);
-      if (error) {
-        return error.message;
-      } else {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  };
 
   useEffect(() => {
     if (state && !state.success && state.error) {
@@ -45,9 +33,9 @@ const RegisterFormComponent = () => {
           <Field>
             <FieldLabel htmlFor="name">Full Name</FieldLabel>
             <Input id="name" name="name" type="text" placeholder="John Doe" />
-            {getFieldError("name") && (
+            {getInputFieldError("name", state) && (
               <span className="text-red-600 font-medium text-xs -mt-2">
-                {getFieldError("name")}
+                {getInputFieldError("name", state)}
               </span>
             )}
           </Field>
@@ -61,9 +49,9 @@ const RegisterFormComponent = () => {
               placeholder="123 Main St"
             />
 
-            {getFieldError("address") && (
+            {getInputFieldError("address", state) && (
               <span className="text-red-600 font-medium text-xs -mt-2">
-                {getFieldError("address")}
+                {getInputFieldError("address", state)}
               </span>
             )}
           </Field>
@@ -77,9 +65,9 @@ const RegisterFormComponent = () => {
               placeholder="m@example.com"
             />
 
-            {getFieldError("email") && (
+            {getInputFieldError("email", state) && (
               <span className="text-red-600 font-medium text-xs -mt-2">
-                {getFieldError("email")}
+                {getInputFieldError("email", state)}
               </span>
             )}
           </Field>
@@ -88,9 +76,9 @@ const RegisterFormComponent = () => {
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input id="password" name="password" type="password" />
 
-            {getFieldError("password") && (
+            {getInputFieldError("password", state) && (
               <span className="text-red-600 font-medium text-xs -mt-2">
-                {getFieldError("password")}
+                {getInputFieldError("password", state)}
               </span>
             )}
           </Field>
@@ -103,9 +91,9 @@ const RegisterFormComponent = () => {
               type="password"
             />
 
-            {getFieldError("confirmPassword") && (
+            {getInputFieldError("confirmPassword", state) && (
               <span className="text-red-600 font-medium text-xs -mt-2">
-                {getFieldError("confirmPassword")}
+                {getInputFieldError("confirmPassword", state)}
               </span>
             )}
           </Field>
@@ -139,9 +127,9 @@ const RegisterFormComponent = () => {
                 </Label>
               </div>
             </div>
-            {getFieldError("gender") && (
+            {getInputFieldError("gender", state) && (
               <span className="text-red-600 font-medium text-xs -mt-2">
-                {getFieldError("gender")}
+                {getInputFieldError("gender", state)}
               </span>
             )}
           </Field>

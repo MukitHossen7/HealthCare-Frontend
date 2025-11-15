@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
-import * as z from "zod";
+
 import { parse } from "cookie";
 import { redirect } from "next/navigation";
 import { JwtPayload } from "jsonwebtoken";
@@ -13,16 +13,7 @@ import {
 import { setCookies } from "./tokenHandler";
 import { serverFetch } from "@/utility/server-fetch";
 import { zodValidator } from "@/utility/zodValidator";
-
-const loginValidationZodSchema = z.object({
-  email: z.email({
-    error: "Please enter a valid email address.",
-  }),
-  password: z
-    .string()
-    .min(8, { error: "Password must be at least 8 characters long." })
-    .max(10, { error: "Password must not exceed 10 characters." }),
-});
+import { loginValidationZodSchema } from "@/zodSchema/auth.validation";
 
 export const loginUser = async (
   _currentState: any,
@@ -116,13 +107,6 @@ export const loginUser = async (
     } else {
       redirect(`${getDefaultDashboardRoutes(userRole)}?loggedIn=true`);
     }
-
-    // const redirectPath = redirectTo
-    //   ? redirectTo
-    //   : getDefaultDashboardRoutes(userRole);
-    // redirect(redirectPath);
-
-    // return data;
   } catch (error: any) {
     if (error?.digest?.startsWith("NEXT_REDIRECT")) {
       throw error;

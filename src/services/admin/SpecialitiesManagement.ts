@@ -3,11 +3,7 @@
 
 import { serverFetch } from "@/utility/server-fetch";
 import { zodValidator } from "@/utility/zodValidator";
-import z from "zod";
-
-const createSpecialtiesZodSchema = z.object({
-  title: z.string().min(1, { error: "Title is required." }),
-});
+import { createSpecialtiesZodSchema } from "@/zodSchema/specialties.validation";
 
 export async function createSpecialties(_currentState: any, formData: any) {
   try {

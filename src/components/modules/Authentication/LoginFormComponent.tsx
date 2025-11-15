@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,24 +8,14 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { loginUser } from "@/services/auth/loginUser";
+import { getInputFieldError } from "@/utility/getInputFieldError";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
 const LoginFormComponent = ({ redirect }: { redirect: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
-  const getFieldError = (fieldName: string) => {
-    if (state && state?.errors) {
-      const error = state?.errors.find((err: any) => err.field === fieldName);
-      if (error) {
-        return error.message;
-      } else {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  };
+
   useEffect(() => {
     if (state && !state.success && state.error) {
       toast.error("Login failed. Please check your credentials.");
@@ -49,9 +38,9 @@ const LoginFormComponent = ({ redirect }: { redirect: string }) => {
               // required
             />
 
-            {getFieldError("email") && (
+            {getInputFieldError("email", state) && (
               <span className="text-red-600 font-medium text-xs -mt-2">
-                {getFieldError("email")}
+                {getInputFieldError("email", state)}
               </span>
             )}
           </Field>
@@ -66,9 +55,9 @@ const LoginFormComponent = ({ redirect }: { redirect: string }) => {
               placeholder="Enter your password"
               // required
             />
-            {getFieldError("password") && (
+            {getInputFieldError("password", state) && (
               <span className="text-red-600 font-medium text-xs -mt-2">
-                {getFieldError("password")}
+                {getInputFieldError("password", state)}
               </span>
             )}
           </Field>
