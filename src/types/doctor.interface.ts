@@ -1,11 +1,12 @@
 import { ISpecialty } from "./specialities.interface";
 
 export interface IDoctor {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   profilePhoto?: string;
   contactNumber: string;
+  password?: string;
   address: string;
   registrationNumber: string;
   experience: number;
@@ -14,9 +15,9 @@ export interface IDoctor {
   qualification: string;
   currentWorkingPlace: string;
   designation: string;
-  averageRating: number;
-  createdAt: Date;
-  updatedAt: Date;
+  averageRating?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   doctorSpecialties?: Array<{
     Specialties?: ISpecialty;
   }>;
