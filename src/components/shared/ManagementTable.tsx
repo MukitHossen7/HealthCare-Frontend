@@ -17,7 +17,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 
-interface Columns<T> {
+export interface Columns<T> {
   header: string;
   accessor: keyof T | ((row: T) => React.ReactNode);
   className?: string;
