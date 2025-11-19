@@ -8,11 +8,11 @@ import DoctorFormDialog from "./DoctorFormDialog";
 import { ISpecialty } from "@/types/specialities.interface";
 
 interface DoctorsManagementHeaderProps {
-  specialties?: ISpecialty[];
+  specialities?: ISpecialty[];
 }
 
 const DoctorsManagementHeader = ({
-  specialties,
+  specialities,
 }: DoctorsManagementHeaderProps) => {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -29,7 +29,7 @@ const DoctorsManagementHeader = ({
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onSuccess={handleSuccess}
-        specialties={specialties}
+        specialities={specialities}
       />
       <ManagementPageHeader
         title="Doctors Management"

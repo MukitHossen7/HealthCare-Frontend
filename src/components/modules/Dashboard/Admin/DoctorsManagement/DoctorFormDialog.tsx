@@ -28,7 +28,7 @@ interface IDoctorFormDialogProps {
   onClose: () => void;
   onSuccess: () => void;
   doctor?: IDoctor;
-  specialties?: ISpecialty[];
+  specialities?: ISpecialty[];
 }
 
 const DoctorFormDialog = ({
@@ -36,7 +36,7 @@ const DoctorFormDialog = ({
   onClose,
   onSuccess,
   doctor,
-  specialties,
+  specialities,
 }: IDoctorFormDialogProps) => {
   const isEdit = !!doctor;
   const [selectedSpeciality, setSelectedSpeciality] = useState<string>("");
@@ -158,8 +158,8 @@ const DoctorFormDialog = ({
                   <SelectValue placeholder="Select a speciality" />
                 </SelectTrigger>
                 <SelectContent>
-                  {specialties && specialties.length > 0 ? (
-                    specialties.map((speciality) => (
+                  {specialities && specialities.length > 0 ? (
+                    specialities.map((speciality) => (
                       <SelectItem key={speciality.id} value={speciality.title}>
                         {speciality.title}
                       </SelectItem>

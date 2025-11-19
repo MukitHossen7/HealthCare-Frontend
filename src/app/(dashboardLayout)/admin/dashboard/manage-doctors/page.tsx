@@ -39,7 +39,10 @@ const ManageDoctorsPage = async ({
         <RefreshButton />
       </div>
       <Suspense fallback={<TableSkeleton columns={8} rows={10} />}>
-        <DoctorTable doctors={doctorResult?.data?.data} />
+        <DoctorTable
+          doctors={doctorResult?.data?.data}
+          specialities={specialitiesResult?.data}
+        />
         <TablePagination currentPage={currentPage} totalPage={totalPage} />
       </Suspense>
     </div>
