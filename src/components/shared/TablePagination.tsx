@@ -22,11 +22,11 @@ const TablePagination = ({ currentPage, totalPage }: TablePaginationProps) => {
     startTransition(() => {
       router.push(`?${params.toString()}`);
     });
-
-    if (totalPage <= 1) {
-      return null;
-    }
   };
+
+  if (totalPage <= 1) {
+    return null;
+  }
   return (
     <div className="flex items-center justify-center gap-2">
       <Button

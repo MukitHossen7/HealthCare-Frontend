@@ -53,7 +53,7 @@ const DoctorFormDialog = ({
       toast.success(state.message);
       onSuccess();
       onClose();
-    } else if (state && !state.success) {
+    } else if (state && !state.success && state.error) {
       toast.error(state.message);
     }
   }, [state, onSuccess, onClose]);

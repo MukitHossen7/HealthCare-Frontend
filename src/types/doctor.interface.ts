@@ -1,5 +1,10 @@
 import { ISpecialty } from "./specialities.interface";
 
+export interface IDoctorSpecialty {
+  specialtiesId: string;
+  doctorId: string;
+  specialties: ISpecialty; // <-- this is NOT an array
+}
 export interface IDoctor {
   id?: string;
   name: string;
@@ -18,7 +23,5 @@ export interface IDoctor {
   averageRating?: number;
   createdAt?: Date;
   updatedAt?: Date;
-  doctorSpecialties?: Array<{
-    Specialties?: ISpecialty;
-  }>;
+  doctorSpecialties?: IDoctorSpecialty[];
 }
