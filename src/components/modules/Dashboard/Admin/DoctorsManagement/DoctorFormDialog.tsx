@@ -16,12 +16,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+// import { useSpecialtySelection } from "@/hooks/specialtyHook/useSpecialtySelection";
 import { createDoctor, updateDoctor } from "@/services/admin/doctorManagement";
 import { IDoctor } from "@/types/doctor.interface";
 import { ISpecialty } from "@/types/specialities.interface";
 import { getInputFieldError } from "@/utility/getInputFieldError";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+// import SpecialtyMultiSelect from "./SpecialtyMultiSelect";
 
 interface IDoctorFormDialogProps {
   open: boolean;
@@ -38,6 +40,7 @@ const DoctorFormDialog = ({
   doctor,
   specialities,
 }: IDoctorFormDialogProps) => {
+  const formRef = useRef<HTMLFormElement>(null);
   const isEdit = !!doctor;
   const [selectedSpeciality, setSelectedSpeciality] = useState<string>("");
   const [state, formAction, pending] = useActionState(
@@ -48,10 +51,27 @@ const DoctorFormDialog = ({
     doctor?.gender || "MALE"
   );
 
+  const handleClose = () => {
+    formRef.current?.reset(); // Clear form
+    onClose(); // Close dialog
+  };
+  // const specialtySelection = useSpecialtySelection({
+  //   doctor,
+  //   isEdit,
+  //   open,
+  // });
+
+  // const getSpecialtyTitle = (id: string): string => {
+  //   return specialities?.find((s) => s.id === id)?.title || "Unknown";
+  // };
+
   useEffect(() => {
     if (state?.success) {
       toast.success(state.message);
       onSuccess();
+      if (formRef.current) {
+        formRef.current.reset();
+      }
       onClose();
     } else if (state && !state.success && state.error) {
       toast.error(state.message);
@@ -59,13 +79,17 @@ const DoctorFormDialog = ({
   }, [state, onSuccess, onClose]);
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-h-[90vh] flex flex-col p-0">
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle>{isEdit ? "Edit Doctor" : "Add New Doctor"}</DialogTitle>
         </DialogHeader>
 
-        <form action={formAction} className="flex flex-col flex-1 min-h-0">
+        <form
+          ref={formRef}
+          action={formAction}
+          className="flex flex-col flex-1 min-h-0"
+        >
           <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
             <Field>
               <FieldLabel htmlFor="name">Name</FieldLabel>
@@ -180,6 +204,24 @@ const DoctorFormDialog = ({
                 </span>
               )}
             </Field>
+
+            {/* Specialty Selection */}
+            {/* <SpecialtyMultiSelect
+              selectedSpecialtyIds={specialtySelection.selectedSpecialtyIds}
+              removedSpecialtyIds={specialtySelection.removedSpecialtyIds}
+              currentSpecialtyId={specialtySelection.currentSpecialtyId}
+              availableSpecialties={specialtySelection.getAvailableSpecialties(
+                specialities!
+              )}
+              isEdit={isEdit}
+              onCurrentSpecialtyChange={
+                specialtySelection.setCurrentSpecialtyId
+              }
+              onAddSpecialty={specialtySelection.handleAddSpecialty}
+              onRemoveSpecialty={specialtySelection.handleRemoveSpecialty}
+              getSpecialtyTitle={getSpecialtyTitle!}
+              getNewSpecialties={specialtySelection.getNewSpecialties}
+            /> */}
 
             <Field>
               <FieldLabel htmlFor="contactNumber">Contact Number</FieldLabel>

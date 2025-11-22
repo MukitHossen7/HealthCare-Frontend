@@ -24,29 +24,38 @@ export async function createDoctor(_prevState: any, formData: FormData) {
       designation: formData.get("designation") as string,
       password: formData.get("password") as string,
     };
-    if (zodValidator(payload, createDoctorZodSchema).success === false) {
-      return zodValidator(payload, createDoctorZodSchema);
+
+    const validatedPayload = zodValidator(payload, createDoctorZodSchema);
+    if (!validatedPayload.success && validatedPayload.errors) {
+      return {
+        success: validatedPayload.success,
+        message: "Validation failed",
+        formData: validatedPayload,
+        errors: validatedPayload.errors,
+      };
     }
 
-    const validatedPayload = zodValidator(payload, createDoctorZodSchema).data;
-
-    if (!validatedPayload) {
-      throw new Error("Invalid payload");
+    if (!validatedPayload.data) {
+      return {
+        success: false,
+        message: "Validation failed",
+        formData: validatedPayload,
+      };
     }
 
     const newPayload = {
-      password: validatedPayload.password,
-      name: validatedPayload.name,
-      email: validatedPayload.email,
-      contactNumber: validatedPayload.contactNumber,
-      address: validatedPayload.address,
-      registrationNumber: validatedPayload.registrationNumber,
-      experience: validatedPayload.experience,
-      gender: validatedPayload.gender,
-      appointmentFee: validatedPayload.appointmentFee,
-      qualification: validatedPayload.qualification,
-      currentWorkingPlace: validatedPayload.currentWorkingPlace,
-      designation: validatedPayload.designation,
+      password: validatedPayload.data.password,
+      name: validatedPayload.data.name,
+      email: validatedPayload.data.email,
+      contactNumber: validatedPayload.data.contactNumber,
+      address: validatedPayload.data.address,
+      registrationNumber: validatedPayload.data.registrationNumber,
+      experience: validatedPayload.data.experience,
+      gender: validatedPayload.data.gender,
+      appointmentFee: validatedPayload.data.appointmentFee,
+      qualification: validatedPayload.data.qualification,
+      currentWorkingPlace: validatedPayload.data.currentWorkingPlace,
+      designation: validatedPayload.data.designation,
     };
     const newFormData = new FormData();
     newFormData.append("data", JSON.stringify(newPayload));
